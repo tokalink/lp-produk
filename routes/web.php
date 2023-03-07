@@ -1,7 +1,9 @@
 <?php
 
+use App\Helpers\Whatsapp;
 use App\Http\Controllers\LandingpageController;
 use App\Http\Controllers\OrderController;
+use App\Models\Device;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +27,9 @@ Route::get('/', [OrderController::class, 'show']);
 Route::get('/order', [OrderController::class, 'show']);
 Route::get('/order/{slug?}', [OrderController::class, 'show']);
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/wa-status/{id}', function ($id) {
+    $device = Device::find($id);
+    if($device){
+        return Whatsapp::status($device->id);
+    }
+});

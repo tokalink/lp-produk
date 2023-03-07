@@ -7,15 +7,19 @@ use App\Models\WebSetting;
 
 class Whatsapp
 {
-	public static function send($phone, $message,$file=null,$device_id=null)
+	public static function send($phone, $message, $file = null, $device_id = null)
 	{
-		$device_key = Device::where('id',$device_id)->first()->device_key;
+		$device_key = 'j5xwlSw8rhs8b4rShohtTbtgQQCoSUPadFmpWj9U';
+		$device = Device::where('id', $device_id)->first();
+		if ($device) {
+			$device_key = $device->apikey;
+		}
 		$data = [
 			'message' => $message,
 			'phone' => $phone,
-			'file' => $file,			
+			'file' => $file,
 			'cmd' => 'send',
-			'device_key' => $device_key ?? 'j5xwlSw8rhs8b4rShohtTbtgQQCoSUPadFmpWj9U'
+			'device_key' => $device_key
 		];
 		$curl = curl_init();
 		curl_setopt_array($curl, [
@@ -43,6 +47,52 @@ class Whatsapp
 			return $response;
 		}
 	}
+
+	public static function status($id)
+	{
+		$device_key = 'j5xwlSw8rhs8b4rShohtTbtgQQCoSUPadFmpWj9U';
+		$device = Device::where('id', $id)->first();
+		if ($device) {
+			$device_key = $device->apikey;
+		}
+		$data = [
+			'cmd' => 'status',
+			'device_key' => $device_key
+		];
+		$curl = curl_init();
+		curl_setopt_array($curl, [
+			CURLOPT_URL => "https://tokalink.id/api/v1/whatsapp",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_SSL_VERIFYHOST => 0,
+			CURLOPT_SSL_VERIFYPEER => 0,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_POSTFIELDS => json_encode($data),
+			CURLOPT_HTTPHEADER => [
+				"Accept: application/json",
+				"Content-Type: application/json"
+			],
+		]);
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		curl_close($curl);
+		if ($err) {
+			return json_encode(['status' => 'error', 'message' => $err]);
+		} else {
+			$res = json_decode($response, true);
+			if ($device) {
+				$device->status = ($res['message'] == 'AUTHENTICATED') ? 'Online' : 'Offline';
+				$device->phone = $res['phone'];
+				$device->name  = $res['name'];
+				$device->save();
+			}
+			return $response;
+		}
+	}
+
 
 	public static function ReplaceArray($array, $string)
 	{

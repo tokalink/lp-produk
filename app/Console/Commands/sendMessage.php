@@ -49,7 +49,7 @@ class sendMessage extends Command
             $message->send_at = date('Y-m-d H:i:s');
             $message->msgid = $resp['data']['messageid'];
             $message->save();            
-            $this->info('Berhasil mengirim pesan');            
+            // $this->info('Berhasil mengirim pesan');            
         }
         sleep(rand(1, 20));
         self::handle();
