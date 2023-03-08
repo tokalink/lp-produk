@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Whatsapp;
 use App\Models\Chat;
 use App\Models\Device;
+use App\Models\Kontak;
 use App\Models\Message;
 use App\Models\TemplateCopywriting;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class WebhookController extends Controller
         $device = Device::where('apikey', $data['token'])->first();
         if (!$device) {
             $device = Device::first();
-        }
+        }        
         $chat->user_id = $device->user_id;
         $chat->device_id = $device->id;
         $chat->from_phone = $data['server_phone'];
@@ -35,6 +36,22 @@ class WebhookController extends Controller
         $chat->msgid = $data['id'];
         $chat->chat_type = $data['in'];
         $chat->save();
+        // save kontak jika belum ada
+        $kontak = Kontak::where('phone', $data['phone'])->first();
+        if (!$kontak) {
+            // cek jumlah chat dari pengirim dengan status 0
+            $count = Chat::where('to_phone', $data['phone'])->where('status', 0)->count();
+            $kontak = new Kontak();
+            $kontak->device_id = $device->id;
+            $kontak->phone = $data['phone'];
+            $kontak->name = $data['name'];
+            $kontak->status = $data['status'] ?? null;
+            $kontak->last_seen = $data['last_seen'] ?? null;
+            $kontak->profile_pic = $data['profile_pic'] ?? null;
+            $kontak->keterangan = $data['keterangan'] ?? null;
+            $kontak->new_chat = $count;
+            $kontak->save();
+        }
         // cek jumlah chat dari pengrim
         $count = Chat::where('to_phone', $data['phone'])->count();
         // jika hanya 1 maka kirimkan pesan selamat datang
