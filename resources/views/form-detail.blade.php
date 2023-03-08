@@ -78,7 +78,7 @@
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-10">
-                <div class="row p-2 pt-5 bg-white border rounded">
+                <div class="row p-2 pt-5 bg-white border rounded m-1">
                     <div class="col-md-5 mt-1"><img class="img-fluid img-responsive rounded product-image" src="/{{ $prod->gambar ?? 'default-image.png' }}"></div>
                     <div class="col-md-7 mt-1">
                         <h5>{{ $produk->nama_produk }}</h5>
@@ -98,7 +98,7 @@
                 </div>
 
                 <form action="{{ url('registrasi') }}" method="post" enctype="multipart/form-data">
-                    <div class="row p-2 pt-5 bg-white border rounded">
+                    <div class="row p-2 pt-5 bg-white border rounded m-1">
                         @csrf
                         <div class="col-md-12 mb-3 ">
                             <center><h4>Form Pembelian</h4></center>
@@ -122,9 +122,13 @@
                             <label for="">Email</label>
                             <input type="text" class="form-control" name="email">
                         </div>
-                        <div class="col-md-12 mb-3">
+                        <div class="col-12 col-lg-6 mb-3">
                             <label for="">Alamat</label>
-                            <textarea name="alamat" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="alamat" id="" cols="30" rows="3" class="form-control"></textarea>
+                        </div>
+                        <div class="col-12 col-lg-6 mb-3">
+                            <label for="">Keterangan</label>
+                            <textarea name="keterangan" id="" cols="30" rows="3" class="form-control"></textarea>
                         </div>
                         <div class="col-md-12 mb-3 text-center">
                             <button type="submit" class="btn btn-success">Beli Produk</button>

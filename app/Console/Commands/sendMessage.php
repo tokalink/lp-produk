@@ -45,9 +45,9 @@ class sendMessage extends Command
             $kirim = Whatsapp::send($message->phone, $message->message, null, $message->device_id);
             $this->info($kirim);
             $resp = json_decode($kirim, true);
-            $message->status = $resp['message'] == 'Terkirim' ? 1 : 2;
+            $message->status = ($resp['message'] == 'Terkirim') ? 1 : 2;
             $message->send_at = date('Y-m-d H:i:s');
-            $message->msgid = $resp['data']['messageid'];
+            $message->msgid = ($resp['message'] == 'Terkirim') ? $resp['data']['messageid'] : null;
             $message->save();            
             // $this->info('Berhasil mengirim pesan');            
         }

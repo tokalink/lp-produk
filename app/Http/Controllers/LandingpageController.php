@@ -53,6 +53,7 @@ class LandingpageController extends Controller
         $pembelian->alamat      = $request->alamat;
         $pembelian->id_produk   = $produk->id;
         $pembelian->harga       = $produk->harga;
+        $pembelian->keterangan  = $request->keterangan;
         $pembelian->save();
         Whatsapp::send($phone, "Terima kasih telah melakukan pemesanan produk *" . $produk->nama_produk . "* dengan harga _" . $produk->harga . "_ di selanjutnya admin kami akan menghubungi anda. Terima kasih.");
         Whatsapp::send('120363019295574541@g.us', "Ada pesanan masuk dari *" . $request->nama . "* dengan nomor wa https://wa.me/" . $phone . " untuk produk *" . $produk->nama_produk . "* dengan harga _" . $produk->harga . "_ Ayo segera Follow up");
