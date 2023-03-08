@@ -34,14 +34,15 @@ class WebhookController extends Controller
         $chat->status = 0;
         $chat->send_at = Date('Y-m-d H:i:s');
         $chat->msgid = $data['id'];
-        $chat->chat_type = $data['in'];
+        $chat->chat_type = 'in';
         $chat->save();
         // save kontak jika belum ada
         $kontak = Kontak::where('phone', $data['phone'])->first();
         if (!$kontak) {
             // cek jumlah chat dari pengirim dengan status 0
-            $count = Chat::where('to_phone', $data['phone'])->where('status', 0)->count();
+            $chat_count = Chat::where('to_phone', $data['phone'])->where('status', 0)->count();
             $kontak = new Kontak();
+            $kontak->user_id = $device->user_id;
             $kontak->device_id = $device->id;
             $kontak->phone = $data['phone'];
             $kontak->name = $data['name'];
@@ -49,7 +50,7 @@ class WebhookController extends Controller
             $kontak->last_seen = $data['last_seen'] ?? null;
             $kontak->profile_pic = $data['profile_pic'] ?? null;
             $kontak->keterangan = $data['keterangan'] ?? null;
-            $kontak->new_chat = $count;
+            $kontak->new_chat = $chat_count;
             $kontak->save();
         }
         // cek jumlah chat dari pengrim

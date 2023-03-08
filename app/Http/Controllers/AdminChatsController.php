@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use Session;
 use Request;
 use DB;
@@ -29,18 +30,18 @@ class AdminChatsController extends \crocodicstudio\crudbooster\controllers\CBCon
 		$this->button_filter = true;
 		$this->button_import = false;
 		$this->button_export = false;
-		$this->table = "chats";
+		$this->table = "kontaks";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 		$this->col[] = ["label" => "User Id", "name" => "user_id", "join" => "cms_users,name"];
-		$this->col[] = ["label" => "Device Id", "name" => "device_id", "join" => "devices,phone"];
-		$this->col[] = ["label" => "From Phone", "name" => "from_phone"];
-		$this->col[] = ["label" => "To Phone", "name" => "to_phone"];
-		$this->col[] = ["label" => "Message", "name" => "message"];
-		$this->col[] = ["label" => "File", "name" => "file"];
-		$this->col[] = ["label" => "Status", "name" => "status"];
+		$this->col[] = ["label" => "Wa Server", "name" => "device_id", "join" => "devices,phone"];
+		$this->col[] = ["label" => "Phone", "name" => "phone"];
+		$this->col[] = ["label" => "Name", "name" => "name"];
+		$this->col[] = ["label" => "Status", "name" => "status", "callback_php" => '($row->status == 1) ? "Aktif" : "Tidak Aktif"'];
+		// dapatkan jumlah chat yang belum terbaca
+		$this->col[] = ["label" => "New Chat", "name" => "new_chat", "callback_php" => '($row->new_chat > 0) ? "<span class=\"badge badge-danger\">".$row->new_chat."</span>" : "<span class=\"badge badge-success\">".$row->new_chat."</span>"'];
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE
@@ -361,6 +362,7 @@ class AdminChatsController extends \crocodicstudio\crudbooster\controllers\CBCon
 
 	public function getDetail($id)
 	{
-		return view('chats.chat-record');
+		$chat	= Chat::groupBy('to_phone')->select('to_phone')->get();
+		return view('chats.chat-record', compact('chat'));
 	}
 }

@@ -2,12 +2,12 @@
 @section('content')
  <!-- Your html goes here -->
  <div class="row">
+  <div class="col-md-3"></div>
      <div class="col-md-6">
-
          <div class="box box-warning direct-chat direct-chat-warning">
              <div class="box-header with-border">
                  <h3 class="box-title">Direct Chat</h3>
-                 <div class="box-tools pull-right">
+                 {{-- <div class="box-tools pull-right">
                      <span data-toggle="tooltip" title="" class="badge bg-yellow"
                          data-original-title="3 New Messages">3</span>
                      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -17,25 +17,20 @@
                          <i class="fa fa-comments"></i></button>
                      <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
                      </button>
-                 </div>
+                 </div> --}}
              </div>
 
              <div class="box-body">
-
                  <div class="direct-chat-messages">
-
                      <div class="direct-chat-msg">
                          <div class="direct-chat-info clearfix">
                              <span class="direct-chat-name pull-left">Alexander Pierce</span>
                              <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
                          </div>
-
                          <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-
                          <div class="direct-chat-text">
                              Is this template really for free? That's unbelievable!
                          </div>
-
                      </div>
 
 
@@ -50,7 +45,6 @@
                          <div class="direct-chat-text">
                              You better believe it!
                          </div>
-
                      </div>
 
 
@@ -65,7 +59,6 @@
                          <div class="direct-chat-text">
                              Working with AdminLTE on a great new app! Wanna join?
                          </div>
-
                      </div>
 
 
