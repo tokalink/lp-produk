@@ -40,14 +40,20 @@ class sendMessage extends Command
     public function handle()
     {
         // ambil data pesan dengan status 0
-        $message = Message::where('status', 0)->first();
+        $message = Message::where('status', 1)->first();
         if ($message) {
             $kirim = Whatsapp::send($message->phone, $message->message, null, $message->device_id);
             $this->info($kirim);
             $resp = json_decode($kirim, true);
-            $message->status = ($resp['message'] == 'Terkirim') ? 1 : 2;
-            $message->send_at = date('Y-m-d H:i:s');
-            $message->msgid = ($resp['message'] == 'Terkirim') ? $resp['data']['messageid'] : null;
+            if($resp['message'] == 'Terkirim'){
+                $message->status = 2;
+                $message->msgid = $resp['data']['messageid'];
+                $message->send_at = date('Y-m-d H:i:s');
+            }elseif($resp['message'] == 'Belum Terdaftar'){
+                $message->status = 3;
+            }else{
+                $message->status = 0;
+            }            
             $message->save();            
             // $this->info('Berhasil mengirim pesan');            
         }

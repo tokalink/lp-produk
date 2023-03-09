@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Whatsapp;
 use App\Models\Chat;
+use App\Models\Device;
+use App\Models\Kontak;
+use Carbon\Carbon;
 use Session;
-use Request;
+// use Request;
 use DB;
 use CRUDBooster;
+use Illuminate\Http\Request;
 
 class AdminChatsController extends \crocodicstudio\crudbooster\controllers\CBController
 {
@@ -362,7 +367,39 @@ class AdminChatsController extends \crocodicstudio\crudbooster\controllers\CBCon
 
 	public function getDetail($id)
 	{
-		$chat	= Chat::groupBy('to_phone')->select('to_phone')->get();
-		return view('chats.chat-record', compact('chat'));
+		$kontak	= Kontak::where('id', $id)->first();
+		$_chat	= Chat::where('to_phone', $kontak->phone)->first();
+		$chat	= Chat::where('to_phone', $kontak->phone)->get();
+		return view('chats.chat-record', compact('_chat', 'chat', 'kontak'));
+	}
+
+	public function sendReply(Request $request)
+	{
+		$device	= Device::where('id', 1)->first();
+		if ($request->ajax()) {
+			$phone		= $request->phone;
+			$message	= $request->message;
+			$chat 		= Whatsapp::send($phone, $message, null, $device->id);
+			$chat		= json_decode($chat);
+			if ($chat->data->status) {
+				$_chat				= new Chat();
+				$_chat->user_id		= $device->user_id;
+				$_chat->device_id	= $device->id;
+				$_chat->from_phone	= $device->phone;
+				$_chat->to_phone	= $phone;
+				$_chat->status		= 0;
+				$_chat->type		= 'text';
+				$_chat->msgid		= $chat->data->messageid;
+				$_chat->chat_type	= 'out';
+				$_chat->message		= $request->message;
+				$_chat->send_at		= Carbon::now();
+				$_chat->created_at	= Carbon::now();
+				$_chat->updated_at	= Carbon::now();
+				$_chat->save();
+			}
+
+			$data_chat	= Chat::where('to_phone', $request->phone)->get();
+			return json_decode($data_chat);
+		}
 	}
 }
