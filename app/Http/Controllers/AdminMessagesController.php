@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Whatsapp;
 use App\Models\Device;
+use App\Models\Message;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -491,6 +492,15 @@ class AdminMessagesController extends \crocodicstudio\crudbooster\controllers\CB
 		}
 		// redirect ke halaman index
 		CRUDBooster::redirect(CRUDBooster::mainpath(), 'Data berhasil diupload', 'success');
+	}
+
+	// update draft ke 1
+	public function sendDraft()
+	{
+		// ambil data dari database
+		$messages = Message::where('status', 0)->update(['status' => 1]);
+		// redirect ke halaman index
+		CRUDBooster::redirect(CRUDBooster::mainpath(), 'Data berhasil diupdate', 'success');
 	}
 
 }

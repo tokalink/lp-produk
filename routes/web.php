@@ -40,3 +40,4 @@ Route::get('/wa-status/{id}', function ($id) {
 
 // Uploads File excel ke messages 
 Route::post('/messages/import', [AdminMessagesController::class, 'getImport'])->name('messages.import');
+Route::get('/admin/messages/send-draft', [AdminMessagesController::class, 'sendDraft'])->name('messages.send-draft');
