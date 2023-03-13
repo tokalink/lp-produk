@@ -2,6 +2,7 @@
 
 use App\Helpers\Whatsapp;
 use App\Http\Controllers\AdminChatsController;
+use App\Http\Controllers\AdminAdminController;
 use App\Http\Controllers\AdminMessagesController;
 use App\Http\Controllers\LandingpageController;
 use App\Http\Controllers\OrderController;
@@ -41,3 +42,5 @@ Route::get('/wa-status/{id}', function ($id) {
 // Uploads File excel ke messages 
 Route::post('/messages/import', [AdminMessagesController::class, 'getImport'])->name('messages.import');
 Route::get('/admin/messages/send-draft', [AdminMessagesController::class, 'sendDraft'])->name('messages.send-draft');
+
+Route::get('/admin', [AdminAdminController::class, 'getIndex']);
